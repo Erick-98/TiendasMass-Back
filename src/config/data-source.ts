@@ -8,10 +8,10 @@ const isCompiled = __dirname.includes("dist");
 
 export const AppDataSource = new DataSource({
   type: "mysql",
-  host:  "localhost",
-  port:  3306,
+  host:  "trolley.proxy.rlwy.net",
+  port:  27302,
   username:  "root",
-  password:  "12345678",
+  password:  "MWGSSmACPRSBZJsJaRsSdwTRoZBjLkgh",
   database:  "tiendasmass",
   synchronize: true,
   logging: true,
