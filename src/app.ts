@@ -28,7 +28,7 @@ app.use(cors({
     'backendtiendasmass-e6emcsagc9gududu.brazilsouth-01.azurewebsites.net',
     'https://e5cbc767e174.ngrok-free.app' // ← tu URL pública
   ],
-  credentials: true
+  credentials: true 
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
