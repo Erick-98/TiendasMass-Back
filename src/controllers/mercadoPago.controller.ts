@@ -61,8 +61,8 @@ export async function crearPreferencia(
     }
 
     // 2) Configurar URLs
-    const frontBase = process.env.FRONT_PUBLIC_URL || 'http://localhost:5173';
-    const publicBase = process.env.PUBLIC_URL || `http://localhost:${process.env.PORT || 443}`;
+    const frontBase = process.env.FRONT_PUBLIC_URL;
+    const publicBase = process.env.PUBLIC_URL;
 
     const backUrls = {
       success: `${frontBase}/checkout?status=success`,
