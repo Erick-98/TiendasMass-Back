@@ -1,10 +1,12 @@
-import { MercadoPagoConfig, Preference } from "mercadopago";
 import { Request, Response } from "express";
+import { MercadoPagoConfig, Preference } from "mercadopago";
 
+// Inicializa MercadoPago con tu token
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN || "",
 });
 
+// Controlador Express para crear una preferencia de pago
 export const crearPreferencia = async (req: Request, res: Response): Promise<void> => {
   try {
     const preference = new Preference(client);
@@ -31,7 +33,7 @@ export const crearPreferencia = async (req: Request, res: Response): Promise<voi
 
     res.json(result);
   } catch (error) {
-    console.error(error);
+    console.error("Error al crear preferencia:", error);
     res.status(500).json({ error: "Error al crear preferencia" });
   }
 };
