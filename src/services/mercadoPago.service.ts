@@ -1,10 +1,11 @@
 import { MercadoPagoConfig, Preference } from "mercadopago";
+import { Request, Response } from "express";
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN || "",
 });
 
-export const crearPreferencia = async (req, res) => {
+export const crearPreferencia = async (req: Request, res: Response): Promise<void> => {
   try {
     const preference = new Preference(client);
 
