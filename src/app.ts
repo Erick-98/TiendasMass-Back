@@ -23,9 +23,9 @@ const PORT = process.env.PORT || 443;
 // Middleware
 app.use(cors({
   origin: [
-    'http://localhost:5173',
+    'https://thankful-desert-05f80c31e.3.azurestaticapps.net',
     'http://localhost:3000',
-    'http://localhost:443',
+    'backendtiendasmass-e6emcsagc9gududu.brazilsouth-01.azurewebsites.net',
     'https://e5cbc767e174.ngrok-free.app' // ← tu URL pública
   ],
   credentials: true
