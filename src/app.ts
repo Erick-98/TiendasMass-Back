@@ -30,6 +30,7 @@ app.get('/health', (req, res) => {
 app.use(cors({
   origin: [
     'https://thankful-desert-05f80c31e.3.azurestaticapps.net',
+    'https://ambitious-sea-040007f1e.3.azurestaticapps.net',
     'http://localhost:3000',
     'backendtiendasmass-e6emcsagc9gududu.brazilsouth-01.azurewebsites.net',
     'https://e5cbc767e174.ngrok-free.app' // ← tu URL pública
