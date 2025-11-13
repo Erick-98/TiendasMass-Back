@@ -9,7 +9,31 @@ import fs from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
 
-const privateKey = fs.readFileSync(path.join(__dirname, '..', 'keys', 'private.key'), 'utf8');
+function getPrivateKey(): string {
+  // Intentamos leer el archivo en dist/keys o src/keys según entorno
+  const candidates = [
+    path.join(__dirname, '..', 'keys', 'private.key'), // cuando está en dist/
+    path.join(__dirname, '..', '..', 'src', 'keys', 'private.key') // en entorno dev
+  ];
+
+  for (const p of candidates) {
+    try {
+      if (fs.existsSync(p)) {
+        return fs.readFileSync(p, 'utf8');
+      }
+    } catch (e) {
+      // ignore and try next
+    }
+  }
+
+  // Fallback a variable de entorno (útil en Azure Key Vault / App Settings)
+  if (process.env.PRIVATE_KEY && process.env.PRIVATE_KEY.length > 0) {
+    return process.env.PRIVATE_KEY;
+  }
+
+  // Si no hay clave, lanzamos un error descriptivo
+  throw new Error('Private key not found. Set PRIVATE_KEY env or include keys/private.key in the build.');
+}
 
 const usuarioRepository = AppDataSource.getRepository(Usuario);
 const estadoRepository = AppDataSource.getRepository(Estado);
@@ -163,20 +187,28 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Crear token JWT
-    const token = jwt.sign(
-      {
-        id: usuario.id,
-        email: usuario.email,
-        nombre: usuario.nombre,
-        rol: usuario.rol.nombre
-      },
-      privateKey,
-      {
-        algorithm: 'RS256',
-        expiresIn: '2h'
-      }
-    );
+    // Crear token JWT — obtenemos la clave en tiempo de ejecución (fallback a env)
+    let token: string;
+    try {
+      const privateKey = getPrivateKey();
+      token = jwt.sign(
+        {
+          id: usuario.id,
+          email: usuario.email,
+          nombre: usuario.nombre,
+          rol: usuario.rol.nombre
+        },
+        privateKey,
+        {
+          algorithm: 'RS256',
+          expiresIn: '2h'
+        }
+      );
+    } catch (e: any) {
+      console.error('JWT key error:', e?.message || e);
+      res.status(500).json({ message: 'Server misconfiguration: private key missing' });
+      return;
+    }
 
     res.json({
       usuario: {
