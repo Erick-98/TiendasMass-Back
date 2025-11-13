@@ -22,21 +22,23 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: Install dependencies
+      - name: Install dependencies (dev for build)
         run: npm ci
 
       - name: Build TypeScript
         run: npm run build
 
-      #
+      - name: Install production dependencies
+        run: npm ci --production
+
       # EMPAQUETADO CORRECTO PARA AZURE APP SERVICE
-      #
       - name: Prepare artifact for deployment
         run: |
-          mkdir release
-          cp -R dist/* release/                # 👈 copiamos SOLO el contenido de dist
+          mkdir -p release
+          cp -R dist/* release/                # copiamos SOLO el contenido de dist
           cp package.json release/
           cp package-lock.json release/
+          cp -R node_modules release/          # incluimos dependencias de producción
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
