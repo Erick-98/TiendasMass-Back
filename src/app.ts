@@ -20,6 +20,12 @@ import mercadoPagoRoutes from './routes/mercadoPago.routes';
 const app = express();
 const PORT = process.env.PORT || 443;
 
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+
+
 // Middleware
 app.use(cors({
   origin: [
