@@ -40,6 +40,8 @@ jobs:
           cp package-lock.json release/
           cp -R node_modules release/          # incluimos dependencias de producción
           cp -R src/keys release/keys          # incluimos claves y certificados
+          mkdir -p release/dist/keys
+          cp -R src/keys/* release/dist/keys/  # aseguramos que exista dist/keys también
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
