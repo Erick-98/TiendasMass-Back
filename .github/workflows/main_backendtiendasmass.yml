@@ -1,7 +1,5 @@
-# ✅ Workflow para construir y desplegar el backend TypeScript en Azure App Service
-# Compatible con tu App Service: tienditamassback
-# ultimo cambio       
 name: Build and deploy TiendasMass Backend to Azure
+
 on:
   push:
     branches:
@@ -15,11 +13,6 @@ jobs:
     permissions:
       contents: read
 
-    defaults:
-      run:
-        working-directory: ./ # 👈 si tu código está en raíz, deja así
-        # si tu backend está en una carpeta "backend", cambia a ./backend
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -27,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x' # ✅ más estable para Azure App Service
+          node-version: '22.x'
 
       - name: Install dependencies
         run: npm ci
@@ -35,10 +28,15 @@ jobs:
       - name: Build TypeScript
         run: npm run build
 
+      #
+      # EMPAQUETADO CORRECTO PARA AZURE APP SERVICE
+      #
       - name: Prepare artifact for deployment
         run: |
           mkdir release
-          cp -R dist package.json package-lock.json release/
+          cp -R dist/* release/                # 👈 copiamos SOLO el contenido de dist
+          cp package.json release/
+          cp package-lock.json release/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -64,13 +62,13 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5DD04091620B44D58FD92834F40F6F5B}}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_5DEFD7D653844D87A5D6C6E103238EC3}}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E8711E66F6D8460B99929FC73CC30141}}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5DD04091620B44D58FD92834F40F6F5B }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_5DEFD7D653844D87A5D6C6E103238EC3 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E8711E66F6D8460B99929FC73CC30141 }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'backendtiendasmass'
           slot-name: 'Production'
-          package: .    
+          package: .
