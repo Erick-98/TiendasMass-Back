@@ -69,7 +69,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Servir archivos estáticos (ajusta según tu estructura tras build)
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../src/public/uploads')));
 
 // Rutas
 app.use('/api/setup', setupRoutes);
